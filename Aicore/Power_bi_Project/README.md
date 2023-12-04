@@ -4,9 +4,9 @@ Greetings! This is a project that is based in Power bi that transforms and clean
 
 ### Table of contents
 
-Description of file types
-Power bi - How do you get the data?
-Data transform/cleaning
+* Description of file types
+* Power bi - How do you get the data?
+* Data transform/cleaning
 
 
 
