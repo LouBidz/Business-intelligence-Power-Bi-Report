@@ -4,9 +4,9 @@ Greetings! This is a project that is based in Power bi that transforms and clean
 
 ### Table of contents
 
-[Description of file types](https://github.com/LouBidz/data-analytics-power-bi-report417/tree/main/Aicore/Power_bi_Project#Description of file types)
-[Power bi - How do you get the data?](https://github.com/LouBidz/data-analytics-power-bi-report417/tree/main/Aicore/Power_bi_Project#Power bi - How do you get the data?)
-[Data transform/cleaning](https://github.com/LouBidz/data-analytics-power-bi-report417/tree/main/Aicore/Power_bi_Project#Data transform/cleaning)
+Description of file types
+Power bi - How do you get the data?
+Data transform/cleaning
 
 
 
