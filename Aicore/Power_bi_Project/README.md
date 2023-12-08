@@ -4,9 +4,14 @@ Greetings! This is a project that is based in Power bi that transforms and clean
 
 ### Table of contents
 
-[Description of file types](https://github.com/LouBidz/data-analytics-power-bi-report417/blob/Power_bi_Project/Aicore/Power_bi_Project/README.md#Description-of-file-types)
-[Power bi - How do you get the data?](https://github.com/LouBidz/data-analytics-power-bi-report417/blob/Power_bi_Project/Aicore/Power_bi_Project/README.md#Power-bi-How-do-you-get-the-data?)
-[Data transform/cleaning](https://github.com/LouBidz/data-analytics-power-bi-report417/blob/Power_bi_Project/Aicore/Power_bi_Project/README.md#Data-transform/cleaning)
+* Description of file types
+* Power bi - How do you get the data?
+* Data transform/cleaning
+* Create a data model and relationship between data tables
+* How to create a date table
+* Create relationships between the data
+* Organising the data by creating a new measure table
+* Date and Geography Hierachy 
 
 
 
@@ -55,4 +60,170 @@ The data transformed here as follows: re-named all the columns to the correct fo
 
 4. Customers - The customers table contains information address,company,country,country code,date of birth,email,full name,join date and telephone.
 The data transformed here as follows: join first name and last name and create a new column with full name, deleted irrelevant columns and re-named the columns to the correct format in power bi.
+
+### Create a data model and relationship between data tables
+
+Power bi time intelligence and Dax functions enable the date to be continuously calculated at different periods of time so that you can query year end, month end and so on. 
+To make use of Power bi time intelligence, a date table is created and is used so that it captures different points in time so that the data can be compared with each other for example sales last year to this year. 
+
+#### How to create a date table 
+
+1.A date table is created to store the time intelligence columns so we can start creating the table.
+The DAX functions have been included here and can be used with any dataset you have, you just change the name of the columns.
+
+DAX function that creates the earliest date to the latest date.
+
+Date Table = 
+VAR MinDate = CALCULATE(MIN(Orders[Order Date]), ALL(Orders))
+VAR MaxDate = CALCULATE(MAX(Orders[Shipping Date]), ALL(Orders))
+RETURN
+CALENDAR(EOMONTH(MinDate, -1) + 1, EOMONTH(MaxDate, 0) + 1)
+
+2. Add columns to the date table
+
+•	Day of Week
+•	Month Number (i.e. Jan = 1, Dec = 12 etc.)
+•	Month Name
+•	Quarter
+•	Year
+•	Start of Year
+•	Start of Quarter
+•	Start of Month
+•	Start of Week
+ 
+DAX function for Day of the Week:
+
+Day of the week = WEEKDAY([Date], 2)// 2 means Monday = 1, Sunday = 7
+
+DAX function for Month Number:
+
+Month number = MONTH([Date])
+
+DAX function for Month Name:
+
+Month name = FORMAT([Date], "mmmm")
+
+DAX function for Quarter
+
+Quarter = QUARTER('Date Table'[Date])
+
+DAX function for Year
+
+Year = YEAR('Date Table'[Date])
+
+DAX function of Start of year
+
+Start of year = STARTOFYEAR('Date Table'[Date])
+
+DAX function of Quarter
+
+Quarter = QUARTER('Date Table'[Date])
+
+DAX function of start of Month
+
+Start of Month = STARTOFMONTH('Date Table'[Date])
+
+DAX function of start of week
+
+Start of week = 'Date Table'[Date] - WEEKDAY('Date Table'[Date], 2) + 1
+
+### Create relationships between the data 
+
+3.In this dataset, the following forms a start schema:
+
+The way to create relationships between the data, we copy the column in each table and it creates a one-to-many realtionsip.
+
+Orders[product_code] to Products[product_code]
+Orders[Store Code] to Stores[store code]
+Orders[User ID] to Customers[User ID]
+Orders[Order Date] to Date[date]
+Orders[Shipping Date] to Date[date]
+
+### Organising the data by creating a new measure table 
+
+4.The data will need to organised, so create a new measure table that captures our calculations. 
+
+- Create a new table in the model view in Power editor,go to enter data on the home ribbon, name it measure table and load. 
+
+- Create the key measures in this table. 
+
+DAX function for Total orders
+
+Total orders = COUNT(Orders[Product Quantity])
+
+DAX function for Total revenue 
+
+Total Revenue = SUMX(Orders, Orders[Product Quantity] * RELATED(Products[Sale price]))
+
+DAX function for Total profit
+
+Total Profit = SUMX(Orders, (RELATED(Products[Sale price]) - RELATED(Products[Cost price])) * Orders[Product Quantity])
+
+DAX function for Total customers
+
+Total customers = DISTINCTCOUNT(Orders[User ID])
+
+DAX function for Total quantity
+
+Total Quantity = SUM(Orders[Product Quantity])
+
+DAX function for Profit YTD
+
+Profit YTD = CALCULATE(SUM('Orders'[Product Quantity]), DATESYTD('Date Table'[Date]))
+
+DAX function for Revenue YTD
+
+Revenue YTD = CALCULATE(SUMX(Orders, Orders[Product Quantity] * RELATED(Products[Sale price])), DATESYTD('Date Table'[Date]))
+
+## Date and Geography Hierachy 
+
+Hierarchies allow the ability for filters to be added to the data so that it can drilled down within a line chart.
+ 
+ Date hierarchy
+
+ * Start of Year
+ * Start of Quarter
+ * Start of Month
+ * Start of Week
+
+Geography hierarchy
+
+* World Region
+* Country
+* Country Region
+
+A new column for the full country name
+
+Geography = Stores[Region] & ", " & Stores[Country]
+
+Create a new calculated column created so that it will take 'GB' and switch it to 'United Kingdom'
+
+Dax function 
+
+Country = 
+    SWITCH (
+        Stores[Country Code],
+        "GB", "United Kingdom",
+        "US", "United States",
+        "DE", "Germany",
+        Stores[Country Code]
+    )
+
+
+
+The following change the data category by going to the table view, in column tools change the data gcategory form the drop down menu. 
+
+World Region : Continent
+Country : Country
+Region : State or Province
+
+
+
+
+
+
+
+
+
+
 
