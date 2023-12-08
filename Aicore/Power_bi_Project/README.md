@@ -4,16 +4,14 @@ Greetings! This is a project that is based in Power bi that transforms and clean
 
 ### Table of contents
 
-[Description of file types](https://github.com/LouBidz/data-analytics-power-bi-report417/tree/main/Aicore/Power_bi_Project#description-of-file-types)
-[Power bi - How do you get the data?](https://github.com/LouBidz/data-analytics-power-bi-report417/tree/main/Aicore/Power_bi_Project#power-bi---how-do-you-get-the-data)
-[Data transform/cleaning](https://github.com/LouBidz/data-analytics-power-bi-report417/tree/main/Aicore/Power_bi_Project#data-transformcleaning)
-[Create a data model and relationship between data tables]()
-[Create relationships between the data]()
-[Organising the data by creating a new measure table]()
-[Date and Geography Hierachy]()
-
-
-
+* Description of file types
+* Power bi - How do you get the data?
+* Data transform/cleaning
+* Create a data model and relationship between data tables
+* How to create a date table
+* Create relationships between the data
+* Organising the data by creating a new measure table
+* Date and Geography Hierachy 
 
 
 ### Description of file types
