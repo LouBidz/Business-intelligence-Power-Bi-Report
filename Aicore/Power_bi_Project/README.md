@@ -12,6 +12,7 @@ Greetings! This is a project that is based in Power bi that transforms and clean
 * Create relationships between the data
 * Organising the data by creating a new measure table
 * Date and Geography Hierachy 
+* Building reports within Power bi 
 
 
 
