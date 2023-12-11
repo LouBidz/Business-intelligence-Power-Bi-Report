@@ -12,6 +12,7 @@ Greetings! This is a project that is based in Power bi that transforms and clean
 * Create relationships between the data
 * Organising the data by creating a new measure table
 * Date and Geography Hierachy 
+* Building reports within Power bi 
 
 
 
@@ -129,9 +130,9 @@ Start of week = 'Date Table'[Date] - WEEKDAY('Date Table'[Date], 2) + 1
 
 ### Create relationships between the data 
 
-3.In this dataset, the following forms a start schema:
+3.In this dataset, the following forms a star schema:
 
-The way to create relationships between the data, we copy the column in each table and it creates a one-to-many realtionsip.
+The way to create relationships between the data, we copy the column in each table and it creates a one-to-many relationship.
 
 Orders[product_code] to Products[product_code]
 Orders[Store Code] to Stores[store code]
@@ -175,6 +176,20 @@ DAX function for Revenue YTD
 
 Revenue YTD = CALCULATE(SUMX(Orders, Orders[Product Quantity] * RELATED(Products[Sale price])), DATESYTD('Date Table'[Date]))
 
+DAX function for Top customer by revenue 
+
+Total Revenue Top Customer = MAXX(TOPN(1,SUMMARIZE(Orders, Customers[Full name], "Total Revenue", [Revenue per Customer]), 
+[Total Revenue], DESC),[Total Revenue])
+
+DAX customer for Top customer
+
+Top Customer = MAXX(TOPN(1, VALUES(Customers[Full name]),[Total Revenue Top Customer],DESC),Customers[Full name])
+
+DAX function for orders by Top customer 
+
+Number of Orders by Top Customer = MAXX(TOPN(1, SUMMARIZE(Orders, Customers[Full name], "Total Orders", COUNT(Orders[Product Quantity])), [Total Orders], DESC), [Total Orders])
+
+
 ## Date and Geography Hierachy 
 
 Hierarchies allow the ability for filters to be added to the data so that it can drilled down within a line chart.
@@ -211,11 +226,52 @@ Country =
 
 
 
-The following change the data category by going to the table view, in column tools change the data gcategory form the drop down menu. 
+The following change the data category by going to the table view, in column tools change the data category from the drop down menu. 
 
 World Region : Continent
 Country : Country
 Region : State or Province
+
+## Building reports within Power bi 
+
+There are many ways to add analysis to your report that use many different types of visuals. The following gives a good example of how you can create useful dashboard for managers. 
+
+5. Customer Analysis report
+
+Customer dashboard
+
+- In the bottom ribbon, add a new tab and name it customer detail. 
+- In the measure table go to the Total customers table, change the name to the Unique customers instead for the report view. 
+- Create a new measure that calculates revenue per customer:
+
+DAX function for revenue per customer 
+
+Revenue per Customer = CALCULATE('Measure table'[Total Revenue]/ 'Measure table'[Unique Customers])
+
+- Insert new visual in the ribbon, find the card visual from the dropdown menu.
+
+Create two cards, one for Unique customers from the measure table and the second revenue per customer.
+
+- Insert new visual in the ribbon, find the donut chart and add customers[Country] in the legend and Unique customers in the values.
+
+- Insert new visual in the ribbon, find the column chart and add Products[Category] in the y axis and Unique customers in the X axis 
+
+- Insert new visual in the ribbon, find the line chart  and add Unique customers in the Y axis and Date hierarchy in the x axis, take out date, start of the week leave start of quarter,start of month and start of year. 
+In this line chart, as you set up the line chart, go straight to visual and go to forecast, switch it on, forecast 10 with 95% interval.
+
+- Insert new visual, create a table for the using the measure Top Customers and rename it Top 20 customers, filter by revenue oer customer, descending. 
+
+- Insert new visual, create 3 cards, one that contains the top customer, no of orders per customer, total reveu generated per top customer.
+
+-  Finally, add a date slicer, go to slicer settings in  the visual pane and choose in between.
+
+
+
+
+
+
+
+
 
 
 
