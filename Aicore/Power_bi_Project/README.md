@@ -232,6 +232,9 @@ World Region : Continent
 Country : Country
 Region : State or Province
 
+Please note for assessor only, otherwise ignore. All previous submissions have used the Orders datatable and it was only 
+showing 50 orders, from here is where the correct Orders data table was used from. Thank you. 
+
 ## Building reports within Power bi 
 
 There are many ways to add analysis to your report that use many different types of visuals. The following gives a good example of how you can create useful dashboard for managers. 
@@ -246,7 +249,9 @@ Customer dashboard
 
 DAX function for revenue per customer 
 
-Revenue per Customer = CALCULATE('Measure table'[Total Revenue]/ 'Measure table'[Unique Customers])
+- Move the Total Revenue and create a new column in Orders and use this measure here. 
+
+Revenue per Customer = CALCULATE(SUM('Orders'[Total Revenue]/ 'Measure table'[Unique Customers]))
 
 - Insert new visual in the ribbon, find the card visual from the dropdown menu.
 
@@ -259,11 +264,86 @@ Create two cards, one for Unique customers from the measure table and the second
 - Insert new visual in the ribbon, find the line chart  and add Unique customers in the Y axis and Date hierarchy in the x axis, take out date, start of the week leave start of quarter,start of month and start of year. 
 In this line chart, as you set up the line chart, go straight to visual and go to forecast, switch it on, forecast 10 with 95% interval.
 
-- Insert new visual, create a table for the using the measure Top Customers and rename it Top 20 customers, filter by revenue oer customer, descending. 
+- Insert new visual, create a table for the using the measure Top Customers and rename it Top 20 customers, filter by revenue per customer, descending. 
 
 - Insert new visual, create 3 cards, one that contains the top customer, no of orders per customer, total reveu generated per top customer.
 
 -  Finally, add a date slicer, go to slicer settings in  the visual pane and choose in between.
+
+6. Executive summary 
+
+To save time, when you have already created a report, you can, right click and copy from the visuals from the previously created customer detail. This will copy the colours and format for you and save time, it also gives your reports consistency. This can be done throughout this summary so if any need to be created, copy from the customer detail and change the values. 
+
+- Create 3 cards and from your measure table, add the following, Total revenue,Total Orders and Total profit.
+
+DAX functions for Total Revenue: 
+
+Total Revenue = SUMX('Orders', 'Orders'[Product Quantity] * RELATED('Products'[Sale price])) 
+
+DAX function for Total Orders:
+
+Total Orders = SUM(Orders[Product Quantity])  
+
+DAX function for Total Profit:
+
+Total Profit = SUMX(Orders, (RELATED(Products[Sale price]) - RELATED(Products[Cost price])) * Orders[Product Quantity]) 
+
+- Add a revenue trending line chart
+
+In the x Axis, use the date hierachy, start of year, start of quarter, start of month
+In the y Axis, Total revenue.
+
+- Create 2 donuts, add Total revenue  by Store[Country] and Store[Country]
+
+- Add a clustered bar chart by Products[Category] and Total Orders from the measure table.
+
+- Create 3 KPI cards. This part is tricky because you have to create columns out of the measure table DAX functions so that it will work for all 3 columns chosen. Otherwise, you will get BLANK in your visuals.
+
+- This is done in two parts, first in the measure table, create a new measure for Previous Quarter Profit, Previous Quarter Revenue and Previous Quarter Orders, Targets, equal to 5% growth in each measure compared to the previous quarter.
+
+- Create a new column in Products:
+
+DAX function for Row Profit
+
+Row Profit = 'Products'[Sale price] - 'Products'[Cost price] 
+
+- Create 3 new measures in the measure table: 
+
+DAX function for Previous Quarter Profit
+
+The reason why the extra daily profit has been created is because Total profit was just giving the same value in the column, this way if it's calculated daily, the DAX function takes each row and works out the daily profit and sums up the previous quarter and is more accurate. Sometimes, the data, can be empty,this could be due to the previous quarter having no sales.
+
+Previous Quarter Profit = CALCULATE(SUM('Products'[Row Profit]), PREVIOUSQUARTER('Date Table'[Date]))
+
+or
+
+Previous Quarter Profit = CALCULATE(SUM('Orders'[Total Profit]),PREVIOUSQUARTER('Date Table'[Date]))
+
+DAX function for Previous Quarter Revenue
+
+Previous Quarter Revenue = CALCULATE([Total Revenue], PREVIOUSQUARTER('Date Table'[Date]))
+
+DAX function for Previous Quarter Orders
+
+Previous Quarter Orders = CALCULATE(SUM('Orders'[Product Quantity]), PREVIOUSQUARTER('Date Table'[Date]))
+
+- Create the targets for each previous quarter  by 5%.
+
+DAX function for Target Revenue
+
+Target Revenue = [Previous Quarter Revenue] * 0.05 
+
+DAX function for Target Profit 
+
+Target Profit = [Previous Quarter Profit] * 0.05
+
+DAX function for Target Orders 
+
+Target Orders = [Previous Quarter Orders] * 0.05
+
+
+
+
 
 
 
