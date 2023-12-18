@@ -235,7 +235,7 @@ Country Region: State or Province
 
 There are many ways to add analysis to your report that use many different types of visuals. The following gives a good example of how you can create useful dashboard for managers. 
 
-5. Customer Analysis report
+1. Customer Analysis report
 
 Customer dashboard (PowerbiProject4)
 
@@ -280,7 +280,7 @@ In this line chart, as you set up the line chart, go straight to visual and go t
 
 You can now edit interactions so that the visuals will work together, by double clicking a visual on the page and choosing the graph symbol above the visual, click on them all for now. This is a good time to set your colour theme for the project. 
 
-6. Executive summary 
+2. Executive summary 
 
 Executive summary (PowerbiProject5)
 
@@ -381,7 +381,7 @@ You can now edit interactions, this enables the report page to link with each vi
 and go to the ribbon,edit interations, then click the graph symbol to enable the links.
  
 
-7. Product detail report
+3. Product detail report
 
 Product Detail report (PowerbiProject6)
 
@@ -445,6 +445,48 @@ Put them both inside the side bar and edit interations and put to the front.
 - Create a back button that closes the side bar, in selection, make sure 2 slicers and shape is not visable. Go to format,Action, choose bookmark slicer closed and in the action text, Slicer bar closed.
 
 To access the open and close buttons, press ctrl and click. 
+
+4. Create a Stores Map
+
+Stores Map (PowerbiProject7)
+
+- Go to the visual ribbon, go to maps, choose Arcgis maps for powerbi, format map tools and make sure zoom is clicked on. 
+
+- Add the following location: Geography, Stores[Latitude] and Stores[longitude], size profit ytd and tooltips store code.
+
+- Add a tile slicer  for Stores [Country] that includes select all.
+
+5. Create a Stores drilldown
+
+- Create a new tab and call it Stores drilldown. In the page information, name the page drilldown and choose Stores[Country] and Stores[Region] for the bits that will drilldown. Choose Used as category for the drill through from. 
+
+- Create new measures for Profit Goal:
+
+Profit Goal = 
+VAR Profit_LastYear = CALCULATE([Profit YTD], SAMEPERIODLASTYEAR('Date Table'[Date]))
+RETURN Profit_LastYear * 1.20
+
+- Create new measures for Revenue Goal:
+
+Revenue Goal = 
+VAR Revenue_LastYear = CALCULATE([Revenue YTD], SAMEPERIODLASTYEAR('Date Table'[Date]))
+RETURN Revenue_LastYear * 1.20
+
+Use previously created measures for Profit YTD and Revenue YTD. 
+
+- Create a gauge to represent Profit YTD, Target , Profit Goal
+- Create a guage to represent Revenue YTD, Target, Revenue Goal
+
+- Add a table, displaying the top 5 products by revenue, include Description, Profit YTD, Total Orders, Total Revenue.
+
+- Add a column chart, Axis x: Category, Axis y: Total orders, Legend: Store code 
+
+- A Card visual showing the currently selected store, Choose Stores[Store code]
+
+Finally, create a new ToolTips TAB, add the Profit YTD and Profit goal gauge and set the page information to tooltips and select show tooltip on, Profit YTD, Profit Goal, Country,Region, Geography,Latitude and longitude. Show Tooltip when Profit YTD is summerized,Profit Goal is summerized,Country,Region,Geography,Latitude and Longitude is Used as category.
+
+
+
 
 
 
