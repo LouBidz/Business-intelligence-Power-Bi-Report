@@ -1,6 +1,6 @@
 ## Power bi Project
 
-Greetings! This is a project that is based in Power bi that transforms and cleans a dataset and create relationships within the data model view. This will be a guide to the project,documenting each process and any troubleshooting you could encounter along the way, if any.
+Greetings! This is a project that is based in Power bi that transforms and cleans a dataset,create relationships and builds reports within Power bi. This will be a guide to the project,documenting each process and any troubleshooting you could encounter along the way, if any.
 
 ### Table of contents
 
@@ -12,7 +12,14 @@ Greetings! This is a project that is based in Power bi that transforms and clean
 * Create relationships between the data
 * Organising the data by creating a new measure table
 * Date and Geography Hierachy 
-* Building reports within Power bi 
+* Building reports within Power bi
+ 1. Customer detail
+ 2. Executive Summary
+ 3. Product detail
+ 4. Stores Map
+ 5. Tools tip TAB 
+
+* Trouble shooting in the project
 
 
 
@@ -25,7 +32,7 @@ Local folder - this is a folder that is stored on your computer.Files stored on 
 Microsoft Azure - Depending on which system you run depends on whether you need to use Azure for this project.                                                                         
 However, if you have a mac or are a linux user, then you need to create a virtual machine in Azure by creating a new account and following instructions on how to set one up. This could incur costs so be mindful of your time you spend on this project or using the virtual machine. Azure do offer a $200 credit upon opening your account but this is time limited. Here is the link to the doc on how to set that up https://learn.microsoft.com/en-us/azure/virtual-machines/windows/quick-create-portal. You can pay for the subscription of $85 a month, but that is only if you feel it would be beneficial for your usage and is not needed for this project. 
 
-Power bi - If you use windows, you can download Power bi here for direct source                                                                                                https://powerbi.microsoft.com/en-gb/landing/free-account/?ef_id=_k_c86f5521357318286277304a9325acff_k_&OCID=AIDcmmmhj6wa7w_SEM__k_c86f5521357318286277304a9325acff_k_&msclkid=c86f5521357318286277304a9325acff
+Power bi - If you use windows, you can download Power bi here for direct source  https://powerbi.microsoft.com/en-gb/landing/free-account/?ef_id=_k_c86f5521357318286277304a9325acff_k_&OCID=AIDcmmmhj6wa7w_SEM__k_c86f5521357318286277304a9325acff_k_&msclkid=c86f5521357318286277304a9325acff
 
 Azure SQL Database - this project uses the course database credentials 
 
@@ -51,7 +58,7 @@ Once you have all the data, we can now clean and transform the data.
 
 1. Orders - The orders table contains the following data, information about each order, including the order and shipping dates, the customer, store and product IDs for associating with dimension tables, and the amount of each product ordered.
 Only one single product per order, so there is only one code per order. 
-The data transformed here as follows: Deleted the card number column, this is because the data should be kept private, split the order data and shipping date into two seperate columns and re-named them, filled in any nulls in order date. Re-named all the columns to the correct format in Power bi.
+The data transformed here as follows: Deleted the card number column, this is because the data should be kept private, split the order date and shipping date into two seperate columns of date and time and re-named them, filled in any nulls in order date, by filtering the blanks. Re-named all the columns to the correct format in Power bi.
 
 2. Products - The products table contains products sold by the company, including the product code, name, category, cost price, sale price, and weight. 
 The data transformed here as follows: removed duplicates from product code, split the weight column by 'kg' and 'g',converted the values to decimal numbers, replaced any errors with 1, deleted the columns after the split weights.Re-named all the columns to the correct format in Power bi.
@@ -94,7 +101,15 @@ CALENDAR(EOMONTH(MinDate, -1) + 1, EOMONTH(MaxDate, 0) + 1)
  
 DAX function for Day of the Week:
 
-Day of the week = WEEKDAY([Date], 2)// 2 means Monday = 1, Sunday = 7
+Day of the week = WEEKDAY([Date], 2) // 2 means Monday = 1, Sunday = 7
+
+DAX function for End of Quarter:
+
+End of Quarter = ENDOFQUARTER('Date Table'[Date])
+
+DAX function for Month Name:
+
+Month name = FORMAT([Date], "mmmm")
 
 DAX function for Month Number:
 
@@ -106,7 +121,7 @@ Month name = FORMAT([Date], "mmmm")
 
 DAX function for Quarter
 
-Quarter = QUARTER('Date Table'[Date])
+Quarter = QUARTER('Date Table'[Date]) // This is similar to month number function 
 
 DAX function for Year
 
@@ -115,10 +130,6 @@ Year = YEAR('Date Table'[Date])
 DAX function of Start of year
 
 Start of year = STARTOFYEAR('Date Table'[Date])
-
-DAX function of Quarter
-
-Quarter = QUARTER('Date Table'[Date])
 
 DAX function of start of Month
 
@@ -142,52 +153,39 @@ Orders[Shipping Date] to Date[date]
 
 ### Organising the data by creating a new measure table 
 
-4.The data will need to organised, so create a new measure table that captures our calculations. 
+4.The data will need to organised, so create a new measure table. This is helpful if you keep your calculations in a table so they can be easily accessible. 
 
 - Create a new table in the model view in Power editor,go to enter data on the home ribbon, name it measure table and load. 
 
 - Create the key measures in this table. 
 
-DAX function for Total orders
+DAX function for Total orders:
 
 Total orders = COUNT(Orders[Product Quantity])
 
-DAX function for Total revenue 
+DAX function for Total revenue:
 
 Total Revenue = SUMX(Orders, Orders[Product Quantity] * RELATED(Products[Sale price]))
 
-DAX function for Total profit
+DAX function for Total profit:
 
 Total Profit = SUMX(Orders, (RELATED(Products[Sale price]) - RELATED(Products[Cost price])) * Orders[Product Quantity])
 
-DAX function for Total customers
+DAX function for Total customers:
 
 Total customers = DISTINCTCOUNT(Orders[User ID])
 
-DAX function for Total quantity
+DAX function for Total quantity:
 
 Total Quantity = SUM(Orders[Product Quantity])
 
-DAX function for Profit YTD
+DAX function for Profit YTD:
 
 Profit YTD = CALCULATE(SUM('Orders'[Product Quantity]), DATESYTD('Date Table'[Date]))
 
-DAX function for Revenue YTD
+DAX function for Revenue YTD:
 
 Revenue YTD = CALCULATE(SUMX(Orders, Orders[Product Quantity] * RELATED(Products[Sale price])), DATESYTD('Date Table'[Date]))
-
-DAX function for Top customer by revenue 
-
-Total Revenue Top Customer = MAXX(TOPN(1,SUMMARIZE(Orders, Customers[Full name], "Total Revenue", [Revenue per Customer]), 
-[Total Revenue], DESC),[Total Revenue])
-
-DAX customer for Top customer
-
-Top Customer = MAXX(TOPN(1, VALUES(Customers[Full name]),[Total Revenue Top Customer],DESC),Customers[Full name])
-
-DAX function for orders by Top customer 
-
-Number of Orders by Top Customer = MAXX(TOPN(1, SUMMARIZE(Orders, Customers[Full name], "Total Orders", COUNT(Orders[Product Quantity])), [Total Orders], DESC), [Total Orders])
 
 
 ## Date and Geography Hierachy 
@@ -203,9 +201,10 @@ Hierarchies allow the ability for filters to be added to the data so that it can
 
 Geography hierarchy
 
-* World Region
+* Region
 * Country
 * Country Region
+
 
 A new column for the full country name
 
@@ -230,10 +229,7 @@ The following change the data category by going to the table view, in column too
 
 World Region : Continent
 Country : Country
-Region : State or Province
-
-Please note for assessor only, otherwise ignore. All previous submissions have used the Orders datatable and it was only 
-showing 50 orders, from here is where the correct Orders data table was used from. Thank you. 
+Country Region: State or Province
 
 ## Building reports within Power bi 
 
@@ -241,21 +237,33 @@ There are many ways to add analysis to your report that use many different types
 
 5. Customer Analysis report
 
-Customer dashboard
+Customer dashboard (PowerbiProject4)
 
 - In the bottom ribbon, add a new tab and name it customer detail. 
 - In the measure table go to the Total customers table, change the name to the Unique customers instead for the report view. 
 - Create a new measure that calculates revenue per customer:
 
-DAX function for revenue per customer 
+DAX function for revenue per customer:
 
-- Move the Total Revenue and create a new column in Orders and use this measure here. 
+Revenue Per Customer = DIVIDE(SUM('Orders'[Total Revenue]),('Measure table'[Unique Customers]))
 
-Revenue per Customer = CALCULATE(SUM('Orders'[Total Revenue]/ 'Measure table'[Unique Customers]))
+DAX function for Top customer by revenue:
+
+Total Revenue Top Customer = MAXX(TOPN(1,SUMMARIZE(Orders, Customers[Full name], "Total Revenue", [Revenue per Customer]), 
+[Total Revenue], DESC),[Total Revenue])
+
+DAX customer for Top customer:
+
+Top Customer = MAXX(TOPN(1, VALUES(Customers[Full name]),[Total Revenue Top Customer],DESC),Customers[Full name])
+
+DAX function for orders by Top customer: 
+
+Number of Orders by Top Customer = MAXX(TOPN(1, SUMMARIZE(Orders, Customers[Full name], "Total Orders", COUNT(Orders[Product Quantity])), [Total Orders], DESC), [Total Orders])
+
 
 - Insert new visual in the ribbon, find the card visual from the dropdown menu.
 
-Create two cards, one for Unique customers from the measure table and the second revenue per customer.
+- Create two cards, one for Unique customers from the measure table and the second Revenue per customer.
 
 - Insert new visual in the ribbon, find the donut chart and add customers[Country] in the legend and Unique customers in the values.
 
@@ -264,13 +272,17 @@ Create two cards, one for Unique customers from the measure table and the second
 - Insert new visual in the ribbon, find the line chart  and add Unique customers in the Y axis and Date hierarchy in the x axis, take out date, start of the week leave start of quarter,start of month and start of year. 
 In this line chart, as you set up the line chart, go straight to visual and go to forecast, switch it on, forecast 10 with 95% interval.
 
-- Insert new visual, create a table for the using the measure Top Customers and rename it Top 20 customers, filter by revenue per customer, descending. 
+- Insert new visual, create a table for the top 20 customers by revenue. In the column section, add Full name,Revenue per customer,Total Orders. 
 
-- Insert new visual, create 3 cards, one that contains the top customer, no of orders per customer, total reveu generated per top customer.
+- Insert new visual, create 3 cards, one that contains the top customer, no of orders per customer, total revenue generated per top customer.
 
--  Finally, add a date slicer, go to slicer settings in  the visual pane and choose in between.
+-  Finally, add a date slicer, go to slicer settings in  the format visual pane and choose in between.
+
+You can now edit interactions so that the visuals will work together, by double clicking a visual on the page and choosing the graph symbol above the visual, click on them all for now. This is a good time to set your colour theme for the project. 
 
 6. Executive summary 
+
+Executive summary (PowerbiProject5)
 
 To save time, when you have already created a report, you can, right click and copy from the visuals from the previously created customer detail. This will copy the colours and format for you and save time, it also gives your reports consistency. This can be done throughout this summary so if any need to be created, copy from the customer detail and change the values. 
 
@@ -288,10 +300,21 @@ DAX function for Total Profit:
 
 Total Profit = SUMX(Orders, (RELATED(Products[Sale price]) - RELATED(Products[Cost price])) * Orders[Product Quantity]) 
 
+- Before you create a revenue trend chart, create a measure for Total Revenue Date:
+
+Total Revenue Date = 
+CALCULATE(
+    SUMX('Orders', 'Orders'[Product Quantity] * RELATED('Products'[Sale price])),
+    FILTER(
+        ALL('Orders'),
+        'Orders'[Order Date] >= DATE(2010, 01, 1) && 'Orders'[Order Date] <= DATE(2023, 09, 31)
+    )
+)
+
 - Add a revenue trending line chart
 
 In the x Axis, use the date hierachy, start of year, start of quarter, start of month
-In the y Axis, Total revenue.
+In the y Axis, Total revenue Date. 
 
 - Create 2 donuts, add Total revenue  by Store[Country] and Store[Country]
 
@@ -307,9 +330,13 @@ DAX function for Row Profit
 
 Row Profit = 'Products'[Sale price] - 'Products'[Cost price] 
 
+- Create calculated columns in Orders:
+
+- Total Revenue,Total Orders and Total Profit, previously as measures.
+
 - Create 3 new measures in the measure table: 
 
-DAX function for Previous Quarter Profit
+DAX function for Previous Quarter Profit:
 
 The reason why the extra daily profit has been created is because Total profit was just giving the same value in the column, this way if it's calculated daily, the DAX function takes each row and works out the daily profit and sums up the previous quarter and is more accurate. Sometimes, the data, can be empty,this could be due to the previous quarter having no sales.
 
@@ -319,27 +346,109 @@ or
 
 Previous Quarter Profit = CALCULATE(SUM('Orders'[Total Profit]),PREVIOUSQUARTER('Date Table'[Date]))
 
-DAX function for Previous Quarter Revenue
+DAX function for Previous Quarter Revenue:
 
 Previous Quarter Revenue = CALCULATE([Total Revenue], PREVIOUSQUARTER('Date Table'[Date]))
 
-DAX function for Previous Quarter Orders
+DAX function for Previous Quarter Orders:
 
 Previous Quarter Orders = CALCULATE(SUM('Orders'[Product Quantity]), PREVIOUSQUARTER('Date Table'[Date]))
 
-- Create the targets for each previous quarter  by 5%.
+- Create the targets for each previous quarter increase by 5%.
 
-DAX function for Target Revenue
+DAX function for Target Revenue:
 
 Target Revenue = [Previous Quarter Revenue] * 0.05 
 
-DAX function for Target Profit 
+DAX function for Target Profit: 
 
 Target Profit = [Previous Quarter Profit] * 0.05
 
-DAX function for Target Orders 
+DAX function for Target Orders:
 
 Target Orders = [Previous Quarter Orders] * 0.05
+
+Now add the 3 visual KPI cards: 
+
+- Value : Total Revenue, Axis x: Date Hierachy: Start of Quarter, Target: Target Profit
+- Value : Total Orders, Axis x: Date Hierachy: Start of Quarter, Target: Target Profit 
+- Value : Total Profit, Axis x: Date Hierchhy: Start of Quarter, Target: Target Profit
+
+Format so that it shows the trend axis as Direction : High is Good,Bad Colour : red,Transparency : 15%, set the callout 
+value to that is show to 1 decimal place. 
+
+You can now edit interactions, this enables the report page to link with each visual, double click on the page
+and go to the ribbon,edit interations, then click the graph symbol to enable the links.
+ 
+
+7. Product detail report
+
+Product Detail report (PowerbiProject6)
+
+- Create a new measure in Date Table:
+
+Quarter = FORMAT('Date Table'[Date],"\QTR q")
+
+- Create the following Dax measures in the Measure table:
+
+DAX function for Current Quarter Orders:
+
+Current Quarter Orders = CALCULATE(SUM('Orders'[Product Quantity]),'Date Table'[Year] = YEAR(TODAY()),'Date Table'[Start of Quarter] = "Q" & QUARTER(TODAY()))
+
+Dax function for Current Quarter Profit:
+
+Current Quarter Profit = VAR __Quarter = "Q" & QUARTER (TODAY ()) VAR __Result = Calculate (SUM (Orders[Total Profit])/12, FILTER ('Date Table','Date Table' [Year]=2023 && 'Date Table' [Quarter]=__Quarter)) RETURN __Result
+
+Dax function for Current Quarter Revenue:
+
+Current Quarter Profit = VAR __Quarter = "Q" & QUARTER (TODAY ()) VAR __Result = Calculate (SUM ('Orders'[Total Revenue])/12, FILTER ('Date Table','Date Table' [Year]=2023 && 'Date Table' [Quarter]=__Quarter)) RETURN __Result
+
+Dax function for Current Quarter Orders Target:
+
+Current Quarter Orders Target = [Current Quarter Orders] * 0.10
+
+Dax function for Current Quarter Profit:
+
+Current Quarter Profit Target = [Current Quarter Profit] * 0.10
+
+Dax function for Current Quarter Revenue:
+
+Current Quarter Revenue Target = [Current Quarter Revenue] * 0.10
+
+Set the callout value in the gauge Axis for the gauges to show if the target is met and use red and your normal colours for the rest. 
+
+- Create two rectangle shapes with your chosen colour theme. These will be used for slicers.
+
+- Create a new calculated column in Orders:
+
+Profit per Order = (RELATED('Products'[Sale price]) - RELATED('Products'[Cost price])) * 'Orders'[Product Quantity]
+
+- Add an area chart and build a visual, Axis x: Date Hierachy: Start of Quarter, Axis y: Total Revenue, Category:Legend
+
+- Add a table and add the following, Description,Total Revenue,Total Customers,Total Orders,Profit per Order. Disp;ay the 
+top 5 Products.
+
+- Create a calculated column in Orders:
+
+Profit per Item = CALCULATE(SUM('Products'[Row Profit])) / CALCULATE(SUM('Orders'[Product Quantity]))
+
+- Find the scatter chart, add the following to it, Values should be Products[Description],Axis x: should be Products[Profit per Item],Axis Y, should be Products[Total Quantity] and Legend should be Products[Category]. Correct the title appropriately.
+
+Sometimes, in report dashboards, it might be a good idea to be able to hide a side bar with the slicers inside so that, it can be used when needed. 
+
+- This can be tricky! The shape that is needed to create this side bar, can get in the way! you can try the following, 
+Create a side bar, the same size as your slicer width, so it shows the values. Click on the shape and edit interactions, put the shape to the front. Now you can add two slicers that are vertical lists, one for Products[Category] to select all and one for Stores[Country].
+Put them both inside the side bar and edit interations and put to the front. 
+
+- Create a button that opens the side bar, in selection, make sure all a visable. Go to format, Action and choose bookmark slicer open and in the action text, Open slicer panel. Bookmark Side Slicer open
+
+- Create a back button that closes the side bar, in selection, make sure 2 slicers and shape is not visable. Go to format,Action, choose bookmark slicer closed and in the action text, Slicer bar closed.
+
+To access the open and close buttons, press ctrl and click. 
+
+
+
+
 
 
 
