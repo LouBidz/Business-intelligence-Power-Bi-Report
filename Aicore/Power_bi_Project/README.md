@@ -17,7 +17,9 @@ Greetings! This is a project that is based in Power bi that transforms and clean
  2. Executive Summary
  3. Product detail
  4. Stores Map
- 5. Tools tip TAB 
+ 5. Tools tip TAB
+
+* Cross filtering and Navigation 
 
 * Trouble shooting in the project
 
@@ -485,8 +487,55 @@ Use previously created measures for Profit YTD and Revenue YTD.
 
 Finally, create a new ToolTips TAB, add the Profit YTD and Profit goal gauge and set the page information to tooltips and select show tooltip on, Profit YTD, Profit Goal, Country,Region, Geography,Latitude and longitude. Show Tooltip when Profit YTD is summerized,Profit Goal is summerized,Country,Region,Geography,Latitude and Longitude is Used as category.
 
+5. ## Cross filtering and Navigation 
 
+Cross filtering 
 
+In order for the data to be appropriately filtered, the filters that can be applied as follows:
+
+* Executive Summary Page
+
+Product Category bar chart and Top 10 Products table should not filter the card visuals or KPIs
+Top 10 Products table should not affect any other visuals
+
+* How to edit interactions. 
+
+- Click on the Product Category bar chart.
+- Go to the Format tab and select Edit Interactions.
+- For each card visual or KPI, click the ‘none’ filter icon (it looks like a slashed circle).
+- Repeat the steps for the Top 10 Products table.
+
+* Customer Detail Page
+
+Top 20 Customers table should not filter any of the other visuals
+Total Customers by Product Donut Chart should not affect the Customers line graph
+Total Customers by Country donut chart should cross-filter Total Customers by Product donut Chart
+
+- Click on the Top 20 Customers table.
+- Go to the Format tab and select Edit Interactions.
+- For each visual, click the ‘none’ filter icon.
+- Repeat the steps for the Total Customers by Product Donut Chart.
+- For the Total Customers by Country donut chart, select the ‘filter’ icon (it looks like a funnel) on the Total Customers by Product donut Chart.
+
+* Product Detail Page
+
+Orders vs. Profitability scatter graph should not affect any other visuals
+
+- Click on the Orders vs. Profitability scatter graph.
+- Go to the Format tab and select Edit Interactions.
+- For each visual, click the ‘none’ filter icon.
+
+Page Navigation
+
+- Add the Buttons: In the sidebar of the Executive Summary page, add four new blank buttons.
+
+- Set Button Style: Go to the Format > Button Style pane, make sure the Apply settings to field is set to Default, and set each button icon to the relevant white png in the Icon tab. Go to icon, custom and then find the white png. 
+
+- Set Hover Style: For each button, go to Format > Button Style > Apply settings to and set it to On Hover, and then select the alternative colourway of the relevant button under the Icon tab.
+
+- Set Button Action: For each button, turn on the Action format option, and select the type as Page navigation, and then select the correct page under Destination.
+
+- Group and Copy Buttons: Finally, group the buttons together and copy accross all pages and additionally add back buttons for the rest of the pages aswell. 
 
 
 
