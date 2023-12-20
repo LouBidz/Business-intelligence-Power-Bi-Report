@@ -13,15 +13,15 @@ Greetings! This is a project that is based in Power bi that transforms and clean
 * Organising the data by creating a new measure table
 * Date and Geography Hierachy 
 * Building reports within Power bi
- 1. Customer detail
- 2. Executive Summary
- 3. Product detail
- 4. Stores Map
- 5. Tools tip TAB
+    1. Customer detail
+    2. Executive Summary
+    3. Product detail
+    4. Stores Map
+    5. Tools tip TAB
 
 * Cross filtering and Navigation 
-
 * Trouble shooting in the project
+* Postgresql Queries
 
 
 
@@ -537,13 +537,153 @@ Page Navigation
 
 - Group and Copy Buttons: Finally, group the buttons together and copy accross all pages and additionally add back buttons for the rest of the pages aswell. 
 
+## Troubleshooting in the project  
+
+1. Always check your data is sound before you continue, if you do upload the wrong data tables into your analysis. Here is what you can do. This project did have this problem and here is how you fix it.
+
+2. Import the data again and transform the data, in this case it was the Orders table that was uploaded incorrectly. Once uploaded, you will need to then go over your functions and make sure they are correct, otherwise you will face errors. 
+
+3. After importing the data and correcting any function errors, add and commit. This project had to do this for for PowerBiProject,PowerbiProject2,PowerbiProject4. Then started again from here. 
+
+4. If you need to divide, move from the measure table and create a column in the Orders table and use that. 
+
+5. In the stores map, when i put the data in longitude and latitude, although it says its in America, its actually in dubai and damscus! 
+
+## Postgresql Queries
+
+In this section, it will look at a Postgres database server that is hosted on Microsoft Azure. To connect to the server and run queries from VSCode, you will need to install the SQLTools extension. Go to VSCode, find the extentions search bar and type in SQL tools, download it and then go to new connection. 
+
+2.Once you have done this, you can connect to the server and the credentials needed to log in are as follows:
+
+HOST: 
+PORT: 
+DATABASE: 
+USER:
+PASSWORD:
+
+3. Postgres Queries 
+
+The following are  5 examples of queries that could be given for a dataset. 
+
+* Question 1 - How many staff are there in all of the UK stores?
+
+SELECT SUM(staff_numbers) AS StaffCount
+FROM dim_store
+WHERE country = 'UK';
+
+*Question 1 Answer
+"staffcount"
+"13273"
+
+* Question 2 - Which month in 2022 has had the highest revenue?
+
+SELECT month_name, 
+       SUM(sale_price - cost_price) AS revenue
+FROM forview
+WHERE DATE_PART('year', TO_TIMESTAMP(dates, 'YYYY-MM-DD HH24:MI:SS.MS')) = 2022
+GROUP BY month_name
+ORDER BY revenue DESC
+LIMIT 1;
+
+* Question 2 Answer
+
+"month_name","revenue"
+"Oct",7567.2753646583715
 
 
+* Question 3 -  Which German store type had the highest revenue for 2022?
+
+SELECT store_type, 
+       SUM(sale_price - cost_price) AS revenue
+FROM forview
+WHERE DATE_PART('year', TO_TIMESTAMP(dates, 'YYYY-MM-DD HH24:MI:SS.MS')) = 2022 AND country = 'Germany'
+GROUP BY store_type
+ORDER BY revenue DESC
+LIMIT 1;
+
+* Question 3 Answer
+
+"store_type","revenue"
+"Local",17568.605977253213
 
 
+* Question 4 -  Create a view where the rows are the store types and the columns are the total sales, percentage of total sales and the count of orders
+
+CREATE VIEW sales_view AS
+SELECT percentage_of_sales, 
+       sale_price, 
+       cost_price, 
+       product_quantity
+FROM forview;
+
+* Question 4 Answer
+
+"percentage_of_sales","sale_price","cost_price","product_quantity"
+"0",42.99,26.304749208751986,"3"
+"0",12.99,7.672220446328534,"3"
+"0",18,9.319705476516887,"3"
+"0",22,13.376214330434756,"3"
+"0",24.99,14.99396233412083,"3"
+"0",12.99,7.6972012327626,"3"
+"0",7.99,3.600020637159497,"3"
+"0",30.99,18.216741163899115,"3"
+"0",1,0.5602533140859068,"3"
+"0",1,0.5004862211029891,"3"
+"0",2,0.8427333329685183,"3"
+"0",1.25,0.4839913735742831,"3"
+"0",6,2.844051445855293,"3"
+"0",8,3.802772293162091,"3"
+"0",20,7.701393002538382,"3"
+"0",1,0.447101086457238,"3"
+"0",21.99,13.078433636903377,"3"
+"0",2.5,1.616842776697874,"3"
+"0",20,9.25834491531736,"3"
+"0",25,15.036561948806275,"3"
+"0",30,17.39092404946517,"3"
+"0",2.5,0.800371860749492,"3"
+"0",3.99,2.3288610857922767,"3"
+"0",50,23.515702381023637,"3"
+"0",2.69,1.2968022019079677,"3"
+"0",25,16.00208739709855,"3"
+"0",19.99,12.21421328464054,"3"
+"0",25,11.3769209269751,"3"
+"0",45,26.214477942661222,"3"
+"0",8,3.617644701420836,"3"
+"0",22,13.142684218462916,"3"
+"0",19.99,11.45541470036036,"3"
+"0",18,8.25774552578017,"3"
+"0",2.99,1.4642237160792453,"3"
+"0",4.49,1.7150104319562816,"3"
+"0",4.49,1.862104541106284,"3"
+"0",70,41.62106472541996,"3"
+"0",12,6.95763617811022,"3"
+"0",22,12.496534483621392,"3"
+"0",1,0.422533702941546,"3"
+"0",22,13.376214330434756,"3"
+"0",8,3.0221968706837856,"3"
+"0",15,9.134181446057944,"3"
+"0",8,4.887051539237564,"3"
+"0",1,0.5047797905755371,"3"
+"0",4,2.075331142016557,"3"
+"0",3.99,1.584622200931556,"3"
+"0",10.99,5.164931336028458,"3"
+"0",0.69,0.3318863903000733,"3"
+"0",12.99,7.902362315948595,"3"
 
 
+* Question 5 -  Which product category generated the most profit for the "Wiltshire, UK" region in 2021?
 
+SELECT category
+FROM forview
+WHERE DATE_PART('year', TO_TIMESTAMP(dates, 'YYYY-MM-DD HH24:MI:SS.MS')) = 2021 AND full_region = 'Wiltshire, UK'
+GROUP BY category
+ORDER BY SUM(sale_price - cost_price) DESC
+LIMIT 1 ;
+
+* Question 5 Answer 
+
+"category"
+"homeware"
 
 
 
