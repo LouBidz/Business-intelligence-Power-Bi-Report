@@ -20,7 +20,7 @@ Greetings! This is a project that is based in Power bi that transforms and clean
     5. Tools tip TAB
 
 * [Cross filtering and Navigation](https://github.com/LouBidz/data-analytics-power-bi-report417/blob/main/Aicore/Power_bi_Project/README.md#cross-filtering-and-navigation) 
-* Trouble shooting in the project
+* [Trouble shooting in the project](https://github.com/LouBidz/data-analytics-power-bi-report417/blob/main/Aicore/Power_bi_Project/README.md#troubleshooting-in-the-project) 
 * Postgresql Queries
 
 
