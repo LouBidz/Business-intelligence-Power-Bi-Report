@@ -19,7 +19,7 @@ Greetings! This is a project that is based in Power bi that transforms and clean
     4. Stores Map
     5. Tools tip TAB
 
-* Cross filtering and Navigation 
+* [Cross filtering and Navigation](https://github.com/LouBidz/data-analytics-power-bi-report417/blob/main/Aicore/Power_bi_Project/README.md#cross-filtering-and-navigation) 
 * Trouble shooting in the project
 * Postgresql Queries
 
@@ -487,7 +487,7 @@ Use previously created measures for Profit YTD and Revenue YTD.
 
 Finally, create a new ToolTips TAB, add the Profit YTD and Profit goal gauge and set the page information to tooltips and select show tooltip on, Profit YTD, Profit Goal, Country,Region, Geography,Latitude and longitude. Show Tooltip when Profit YTD is summerized,Profit Goal is summerized,Country,Region,Geography,Latitude and Longitude is Used as category.
 
-5. ## Cross filtering and Navigation 
+## Cross filtering and Navigation 
 
 Cross filtering 
 
