@@ -21,8 +21,7 @@ Greetings! This is a project that is based in Power bi that transforms and clean
 
 * [Cross filtering and Navigation](https://github.com/LouBidz/data-analytics-power-bi-report417/blob/main/Aicore/Power_bi_Project/README.md#cross-filtering-and-navigation) 
 * [Trouble shooting in the project](https://github.com/LouBidz/data-analytics-power-bi-report417/blob/main/Aicore/Power_bi_Project/README.md#troubleshooting-in-the-project) 
-* Postgresql Queries
-
+* [Postgresql Queries](https://github.com/LouBidz/data-analytics-power-bi-report417/blob/main/Aicore/Power_bi_Project/README.md#postgresql-queries)
 
 
 ### Description of file types
@@ -76,7 +75,7 @@ The data transformed here as follows: join first name and last name and create a
 Power bi time intelligence and Dax functions enable the date to be continuously calculated at different periods of time so that you can query year end, month end and so on. 
 To make use of Power bi time intelligence, a date table is created and is used so that it captures different points in time so that the data can be compared with each other for example sales last year to this year. 
 
-#### How to create a date table 
+### How to create a date table 
 
 1.A date table is created to store the time intelligence columns so we can start creating the table.
 The DAX functions have been included here and can be used with any dataset you have, you just change the name of the columns.
@@ -190,7 +189,7 @@ DAX function for Revenue YTD:
 Revenue YTD = CALCULATE(SUMX(Orders, Orders[Product Quantity] * RELATED(Products[Sale price])), DATESYTD('Date Table'[Date]))
 
 
-## Date and Geography Hierachy 
+### Date and Geography Hierachy 
 
 Hierarchies allow the ability for filters to be added to the data so that it can drilled down within a line chart.
  
@@ -233,7 +232,7 @@ World Region : Continent
 Country : Country
 Country Region: State or Province
 
-## Building reports within Power bi 
+### Building reports within Power bi 
 
 There are many ways to add analysis to your report that use many different types of visuals. The following gives a good example of how you can create useful dashboard for managers. 
 
@@ -525,7 +524,7 @@ Orders vs. Profitability scatter graph should not affect any other visuals
 - Go to the Format tab and select Edit Interactions.
 - For each visual, click the ‘none’ filter icon.
 
-Page Navigation
+* Page Navigation
 
 - Add the Buttons: In the sidebar of the Executive Summary page, add four new blank buttons.
 
@@ -549,7 +548,7 @@ Page Navigation
 
 5. In the stores map, when i put the data in longitude and latitude, although it says its in America, its actually in dubai and damscus! 
 
-## Postgresql Queries
+### Postgresql Queries
 
 In this section, it will look at a Postgres database server that is hosted on Microsoft Azure. To connect to the server and run queries from VSCode, you will need to install the SQLTools extension. Go to VSCode, find the extentions search bar and type in SQL tools, download it and then go to new connection. 
 
