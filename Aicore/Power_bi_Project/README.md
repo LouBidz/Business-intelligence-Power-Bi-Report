@@ -603,17 +603,18 @@ PASSWORD:
 The following are  5 examples of queries that could be given for a dataset. 
 
 * Question 1 - How many staff are there in all of the UK stores?
-
+```
 SELECT SUM(staff_numbers) AS StaffCount
 FROM dim_store
 WHERE country = 'UK';
-
+```
+```
 *Question 1 Answer
 "staffcount"
 "13273"
-
+```
 * Question 2 - Which month in 2022 has had the highest revenue?
-
+```
 SELECT month_name, 
        SUM(sale_price - cost_price) AS revenue
 FROM forview
@@ -621,15 +622,15 @@ WHERE DATE_PART('year', TO_TIMESTAMP(dates, 'YYYY-MM-DD HH24:MI:SS.MS')) = 2022
 GROUP BY month_name
 ORDER BY revenue DESC
 LIMIT 1;
-
+```
 * Question 2 Answer
-
+```
 "month_name","revenue"
 "Oct",7567.2753646583715
-
+```
 
 * Question 3 -  Which German store type had the highest revenue for 2022?
-
+```
 SELECT store_type, 
        SUM(sale_price - cost_price) AS revenue
 FROM forview
@@ -637,24 +638,24 @@ WHERE DATE_PART('year', TO_TIMESTAMP(dates, 'YYYY-MM-DD HH24:MI:SS.MS')) = 2022 
 GROUP BY store_type
 ORDER BY revenue DESC
 LIMIT 1;
-
+```
 * Question 3 Answer
-
+```
 "store_type","revenue"
 "Local",17568.605977253213
-
+```
 
 * Question 4 -  Create a view where the rows are the store types and the columns are the total sales, percentage of total sales and the count of orders
-
+```
 CREATE VIEW sales_view AS
 SELECT percentage_of_sales, 
        sale_price, 
        cost_price, 
        product_quantity
 FROM forview;
-
+```
 * Question 4 Answer
-
+```
 "percentage_of_sales","sale_price","cost_price","product_quantity"
 "0",42.99,26.304749208751986,"3"
 "0",12.99,7.672220446328534,"3"
@@ -706,22 +707,22 @@ FROM forview;
 "0",10.99,5.164931336028458,"3"
 "0",0.69,0.3318863903000733,"3"
 "0",12.99,7.902362315948595,"3"
-
+```
 
 * Question 5 -  Which product category generated the most profit for the "Wiltshire, UK" region in 2021?
-
+```
 SELECT category
 FROM forview
 WHERE DATE_PART('year', TO_TIMESTAMP(dates, 'YYYY-MM-DD HH24:MI:SS.MS')) = 2021 AND full_region = 'Wiltshire, UK'
 GROUP BY category
 ORDER BY SUM(sale_price - cost_price) DESC
 LIMIT 1 ;
-
+```
 * Question 5 Answer 
-
+```
 "category"
 "homeware"
-
+```
 
 
 
