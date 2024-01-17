@@ -82,11 +82,13 @@ The DAX functions have been included here and can be used with any dataset you h
 
 DAX function that creates the earliest date to the latest date.
 
+```
 Date Table = 
 VAR MinDate = CALCULATE(MIN(Orders[Order Date]), ALL(Orders))
 VAR MaxDate = CALCULATE(MAX(Orders[Shipping Date]), ALL(Orders))
 RETURN
 CALENDAR(EOMONTH(MinDate, -1) + 1, EOMONTH(MaxDate, 0) + 1)
+```
 
 2. Add columns to the date table
 
@@ -99,46 +101,55 @@ CALENDAR(EOMONTH(MinDate, -1) + 1, EOMONTH(MaxDate, 0) + 1)
 •	Start of Quarter
 •	Start of Month
 •	Start of Week
- 
-DAX function for Day of the Week:
 
+
+DAX function for Day of the Week:
+```
 Day of the week = WEEKDAY([Date], 2) // 2 means Monday = 1, Sunday = 7
+```
 
 DAX function for End of Quarter:
-
+```
 End of Quarter = ENDOFQUARTER('Date Table'[Date])
+```
 
 DAX function for Month Name:
-
+```
 Month name = FORMAT([Date], "mmmm")
+```
 
 DAX function for Month Number:
-
+```
 Month number = MONTH([Date])
+```
 
 DAX function for Month Name:
-
+```
 Month name = FORMAT([Date], "mmmm")
+```
 
 DAX function for Quarter
-
-Quarter = QUARTER('Date Table'[Date]) // This is similar to month number function 
+```
+Quarter = QUARTER('Date Table'[Date]) // This is similar to month number function
+```
 
 DAX function for Year
-
+```
 Year = YEAR('Date Table'[Date])
+```
 
 DAX function of Start of year
-
+```
 Start of year = STARTOFYEAR('Date Table'[Date])
-
+```
 DAX function of start of Month
-
+```
 Start of Month = STARTOFMONTH('Date Table'[Date])
-
+```
 DAX function of start of week
-
+```
 Start of week = 'Date Table'[Date] - WEEKDAY('Date Table'[Date], 2) + 1
+```
 
 ### Create relationships between the data 
 
@@ -161,33 +172,39 @@ Orders[Shipping Date] to Date[date]
 - Create the key measures in this table. 
 
 DAX function for Total orders:
-
+```
 Total orders = COUNT(Orders[Product Quantity])
+```
 
 DAX function for Total revenue:
-
+```
 Total Revenue = SUMX(Orders, Orders[Product Quantity] * RELATED(Products[Sale price]))
+```
 
 DAX function for Total profit:
-
+```
 Total Profit = SUMX(Orders, (RELATED(Products[Sale price]) - RELATED(Products[Cost price])) * Orders[Product Quantity])
+```
 
 DAX function for Total customers:
-
+```
 Total customers = DISTINCTCOUNT(Orders[User ID])
+```
 
 DAX function for Total quantity:
-
+```
 Total Quantity = SUM(Orders[Product Quantity])
+```
 
 DAX function for Profit YTD:
-
+```
 Profit YTD = CALCULATE(SUM('Orders'[Product Quantity]), DATESYTD('Date Table'[Date]))
+```
 
 DAX function for Revenue YTD:
-
+```
 Revenue YTD = CALCULATE(SUMX(Orders, Orders[Product Quantity] * RELATED(Products[Sale price])), DATESYTD('Date Table'[Date]))
-
+```
 
 ### Date and Geography Hierachy 
 
@@ -208,11 +225,12 @@ Geography hierarchy
 
 
 A new column for the full country name
-
+```
 Geography = Stores[Region] & ", " & Stores[Country]
+```
 
 Create a new calculated column created so that it will take 'GB' and switch it to 'United Kingdom'
-
+```
 Dax function 
 
 Country = 
@@ -223,7 +241,7 @@ Country =
         "DE", "Germany",
         Stores[Country Code]
     )
-
+```
 
 
 The following change the data category by going to the table view, in column tools change the data category from the drop down menu. 
@@ -245,22 +263,25 @@ Customer dashboard (PowerbiProject4)
 - Create a new measure that calculates revenue per customer:
 
 DAX function for revenue per customer:
-
+```
 Revenue Per Customer = DIVIDE(SUM('Orders'[Total Revenue]),('Measure table'[Unique Customers]))
+```
 
 DAX function for Top customer by revenue:
-
+```
 Total Revenue Top Customer = MAXX(TOPN(1,SUMMARIZE(Orders, Customers[Full name], "Total Revenue", [Revenue per Customer]), 
 [Total Revenue], DESC),[Total Revenue])
+```
 
 DAX customer for Top customer:
-
+```
 Top Customer = MAXX(TOPN(1, VALUES(Customers[Full name]),[Total Revenue Top Customer],DESC),Customers[Full name])
+```
 
 DAX function for orders by Top customer: 
-
+```
 Number of Orders by Top Customer = MAXX(TOPN(1, SUMMARIZE(Orders, Customers[Full name], "Total Orders", COUNT(Orders[Product Quantity])), [Total Orders], DESC), [Total Orders])
-
+```
 
 - Insert new visual in the ribbon, find the card visual from the dropdown menu.
 
@@ -277,7 +298,7 @@ In this line chart, as you set up the line chart, go straight to visual and go t
 
 - Insert new visual, create 3 cards, one that contains the top customer, no of orders per customer, total revenue generated per top customer.
 
--  Finally, add a date slicer, go to slicer settings in  the format visual pane and choose in between.
+- Finally, add a date slicer, go to slicer settings in  the format visual pane and choose in between.
 
 You can now edit interactions so that the visuals will work together, by double clicking a visual on the page and choosing the graph symbol above the visual, click on them all for now. This is a good time to set your colour theme for the project. 
 
@@ -289,20 +310,24 @@ To save time, when you have already created a report, you can, right click and c
 
 - Create 3 cards and from your measure table, add the following, Total revenue,Total Orders and Total profit.
 
-DAX functions for Total Revenue: 
 
+DAX functions for Total Revenue: 
+```
 Total Revenue = SUMX('Orders', 'Orders'[Product Quantity] * RELATED('Products'[Sale price])) 
+```
 
 DAX function for Total Orders:
-
+```
 Total Orders = SUM(Orders[Product Quantity])  
+```
 
 DAX function for Total Profit:
-
-Total Profit = SUMX(Orders, (RELATED(Products[Sale price]) - RELATED(Products[Cost price])) * Orders[Product Quantity]) 
+```
+Total Profit = SUMX(Orders, (RELATED(Products[Sale price]) - RELATED(Products[Cost price])) * Orders[Product Quantity])
+```
 
 - Before you create a revenue trend chart, create a measure for Total Revenue Date:
-
+```
 Total Revenue Date = 
 CALCULATE(
     SUMX('Orders', 'Orders'[Product Quantity] * RELATED('Products'[Sale price])),
@@ -311,7 +336,7 @@ CALCULATE(
         'Orders'[Order Date] >= DATE(2010, 01, 1) && 'Orders'[Order Date] <= DATE(2023, 09, 31)
     )
 )
-
+```
 - Add a revenue trending line chart
 
 In the x Axis, use the date hierachy, start of year, start of quarter, start of month
@@ -326,10 +351,11 @@ In the y Axis, Total revenue Date.
 - This is done in two parts, first in the measure table, create a new measure for Previous Quarter Profit, Previous Quarter Revenue and Previous Quarter Orders, Targets, equal to 5% growth in each measure compared to the previous quarter.
 
 - Create a new column in Products:
-
+```
 DAX function for Row Profit
 
-Row Profit = 'Products'[Sale price] - 'Products'[Cost price] 
+Row Profit = 'Products'[Sale price] - 'Products'[Cost price]
+```
 
 - Create calculated columns in Orders:
 
@@ -340,34 +366,40 @@ Row Profit = 'Products'[Sale price] - 'Products'[Cost price]
 DAX function for Previous Quarter Profit:
 
 The reason why the extra daily profit has been created is because Total profit was just giving the same value in the column, this way if it's calculated daily, the DAX function takes each row and works out the daily profit and sums up the previous quarter and is more accurate. Sometimes, the data, can be empty,this could be due to the previous quarter having no sales.
-
+```
 Previous Quarter Profit = CALCULATE(SUM('Products'[Row Profit]), PREVIOUSQUARTER('Date Table'[Date]))
 
 or
 
 Previous Quarter Profit = CALCULATE(SUM('Orders'[Total Profit]),PREVIOUSQUARTER('Date Table'[Date]))
+```
 
 DAX function for Previous Quarter Revenue:
-
+```
 Previous Quarter Revenue = CALCULATE([Total Revenue], PREVIOUSQUARTER('Date Table'[Date]))
+```
 
 DAX function for Previous Quarter Orders:
-
+```
 Previous Quarter Orders = CALCULATE(SUM('Orders'[Product Quantity]), PREVIOUSQUARTER('Date Table'[Date]))
-
+```
 - Create the targets for each previous quarter increase by 5%.
 
-DAX function for Target Revenue:
 
-Target Revenue = [Previous Quarter Revenue] * 0.05 
+DAX function for Target Revenue:
+```
+Target Revenue = [Previous Quarter Revenue] * 0.05
+```
 
 DAX function for Target Profit: 
-
+```
 Target Profit = [Previous Quarter Profit] * 0.05
+```
 
 DAX function for Target Orders:
-
+```
 Target Orders = [Previous Quarter Orders] * 0.05
+```
 
 Now add the 3 visual KPI cards: 
 
@@ -387,51 +419,57 @@ and go to the ribbon,edit interations, then click the graph symbol to enable the
 Product Detail report (PowerbiProject6)
 
 - Create a new measure in Date Table:
-
+```
 Quarter = FORMAT('Date Table'[Date],"\QTR q")
-
+```
 - Create the following Dax measures in the Measure table:
-
+  
 DAX function for Current Quarter Orders:
-
+```
 Current Quarter Orders = CALCULATE(SUM('Orders'[Product Quantity]),'Date Table'[Year] = YEAR(TODAY()),'Date Table'[Start of Quarter] = "Q" & QUARTER(TODAY()))
+```
 
 Dax function for Current Quarter Profit:
-
+```
 Current Quarter Profit = VAR __Quarter = "Q" & QUARTER (TODAY ()) VAR __Result = Calculate (SUM (Orders[Total Profit])/12, FILTER ('Date Table','Date Table' [Year]=2023 && 'Date Table' [Quarter]=__Quarter)) RETURN __Result
+```
 
 Dax function for Current Quarter Revenue:
-
+```
 Current Quarter Profit = VAR __Quarter = "Q" & QUARTER (TODAY ()) VAR __Result = Calculate (SUM ('Orders'[Total Revenue])/12, FILTER ('Date Table','Date Table' [Year]=2023 && 'Date Table' [Quarter]=__Quarter)) RETURN __Result
+```
 
 Dax function for Current Quarter Orders Target:
-
+```
 Current Quarter Orders Target = [Current Quarter Orders] * 0.10
+```
 
 Dax function for Current Quarter Profit:
-
+```
 Current Quarter Profit Target = [Current Quarter Profit] * 0.10
+```
 
 Dax function for Current Quarter Revenue:
-
+```
 Current Quarter Revenue Target = [Current Quarter Revenue] * 0.10
-
+```
 Set the callout value in the gauge Axis for the gauges to show if the target is met and use red and your normal colours for the rest. 
 
 - Create two rectangle shapes with your chosen colour theme. These will be used for slicers.
 
 - Create a new calculated column in Orders:
-
+```
 Profit per Order = (RELATED('Products'[Sale price]) - RELATED('Products'[Cost price])) * 'Orders'[Product Quantity]
-
+```
 - Add an area chart and build a visual, Axis x: Date Hierachy: Start of Quarter, Axis y: Total Revenue, Category:Legend
 
 - Add a table and add the following, Description,Total Revenue,Total Customers,Total Orders,Profit per Order. Disp;ay the 
 top 5 Products.
 
 - Create a calculated column in Orders:
-
+```
 Profit per Item = CALCULATE(SUM('Products'[Row Profit])) / CALCULATE(SUM('Orders'[Product Quantity]))
+```
 
 - Find the scatter chart, add the following to it, Values should be Products[Description],Axis x: should be Products[Profit per Item],Axis Y, should be Products[Total Quantity] and Legend should be Products[Category]. Correct the title appropriately.
 
@@ -462,17 +500,17 @@ Stores Map (PowerbiProject7)
 - Create a new tab and call it Stores drilldown. In the page information, name the page drilldown and choose Stores[Country] and Stores[Region] for the bits that will drilldown. Choose Used as category for the drill through from. 
 
 - Create new measures for Profit Goal:
-
+```
 Profit Goal = 
 VAR Profit_LastYear = CALCULATE([Profit YTD], SAMEPERIODLASTYEAR('Date Table'[Date]))
 RETURN Profit_LastYear * 1.20
-
+```
 - Create new measures for Revenue Goal:
-
+```
 Revenue Goal = 
 VAR Revenue_LastYear = CALCULATE([Revenue YTD], SAMEPERIODLASTYEAR('Date Table'[Date]))
 RETURN Revenue_LastYear * 1.20
-
+```
 Use previously created measures for Profit YTD and Revenue YTD. 
 
 - Create a gauge to represent Profit YTD, Target , Profit Goal
