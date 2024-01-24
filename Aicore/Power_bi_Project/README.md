@@ -153,11 +153,11 @@ Start of week = 'Date Table'[Date] - WEEKDAY('Date Table'[Date], 2) + 1
 
 The way to create relationships between the data, we copy the column in each table and it creates a one-to-many relationship.
 
-Orders[product_code] to Products[product_code]
-Orders[Store Code] to Stores[store code]
-Orders[User ID] to Customers[User ID]
-Orders[Order Date] to Date[date]
-Orders[Shipping Date] to Date[date]
+* Orders[product_code] to Products[product_code]
+* Orders[Store Code] to Stores[store code]
+* Orders[User ID] to Customers[User ID]
+* Orders[Order Date] to Date[date]
+* Orders[Shipping Date] to Date[date]
 
 ### Organising the data by creating a new measure table 
 
