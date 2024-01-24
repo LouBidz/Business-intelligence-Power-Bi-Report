@@ -83,11 +83,7 @@ The DAX functions have been included here and can be used with any dataset you h
 DAX function that creates the earliest date to the latest date.
 
 ```
-Date Table = 
-VAR MinDate = CALCULATE(MIN(Orders[Order Date]), ALL(Orders))
-VAR MaxDate = CALCULATE(MAX(Orders[Shipping Date]), ALL(Orders))
-RETURN
-CALENDAR(EOMONTH(MinDate, -1) + 1, EOMONTH(MaxDate, 0) + 1)
+Date = CALENDAR(MIN(Orders[Order Date]), MAX(Orders[Shipping Date]))
 ```
 
 2. Add columns to the date table
@@ -105,7 +101,7 @@ CALENDAR(EOMONTH(MinDate, -1) + 1, EOMONTH(MaxDate, 0) + 1)
 
 DAX function for Day of the Week:
 ```
-Day of the week = WEEKDAY([Date], 2) // 2 means Monday = 1, Sunday = 7
+Day of the week = FORMAT([Date],"dddd")
 ```
 
 DAX function for End of Quarter:
