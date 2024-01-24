@@ -126,7 +126,7 @@ Month name = FORMAT([Date], "mmmm")
 
 DAX function for Quarter
 ```
-Quarter = QUARTER('Date Table'[Date]) // This is similar to month number function
+Quarter = QUARTER('Date Table'[Date]) 
 ```
 
 DAX function for Year
